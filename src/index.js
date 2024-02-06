@@ -102,7 +102,7 @@ app.get('/api/total', async (req, res) => {
       const totalHours = total ? total.totalHours || 0 : 0;
   
       res.json({ success: true, data: { salary: totalSalary, hours: totalHours } });
-      console.log('全体の合計値:', total);
+      console.log('全体の合計値:', res.json.data);
     } catch (error) {
       console.error('全体の合計値の取得エラー:', error);
       res.status(500).json({ success: false, error: '内部サーバーエラー' });
