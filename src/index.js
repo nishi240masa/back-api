@@ -85,13 +85,9 @@ app.get('/api/monthlyTotals', async (req, res) => {
 
     console.log('result.rows:', result.rows);
     console.log('result.rows[0]:', result.rows[0]);
-    const monthlyTotals = result.rows.reduce((acc, row) => {
-      acc[row.month] = { salary: row.totalSalary || 0, hours: row.totalHours || 0 };
-      return acc;
-    }, {});
-    console.log('result.rows[1]:', result.rows[1]);
-    console.log('result.rows.reduce:', result.rows.reduce);
-    console.log('monthlyTotals:', monthlyTotals);
+    mon = result.rows[0];
+    const monthlyTotals = { month: mon.month, totalsalary: mon.totalsalary, totalhours: mon.totalhours};
+
     res.json({ success: true, data: monthlyTotals });
 
     console.log('月ごとの合計値:', monthlyTotals);
