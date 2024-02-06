@@ -42,26 +42,39 @@ pool.query(createTableQuery, (err, result) => {
   }
 });
 
+// server.js
+// ...
+
 app.post('/api/records', async (req, res) => {
-  const { dateKey, salary, hours } = req.body;
-
-  console.log('dateKey:', dateKey);
-  console.log('salary:', salary);
-  console.log('hours:', hours);
-
-  try {
-    const result = await pool.query(
-      'INSERT INTO records (dateKey, salary, hours) VALUES ($1, $2, $3) RETURNING *',
-      [dateKey, salary, hours]
-    );
-
-    console.log('レコードが正常に挿入されました');
-    res.status(201).json({ success: true, data: result.rows[0] });
-  } catch (error) {
-    console.error('レコードの挿入エラー:', error);
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
+    const { dateKey, salary, hours } = req.body;
+  
+    console.log('dateKey:', dateKey);
+    console.log('salary:', salary);
+    console.log('hours:', hours);
+  
+    try {
+      // dateKey を正しい形式に変換
+      const formattedDateKey = new Date(dateKey).toLocaleDateString('ja-JP', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      });
+  
+      const result = await pool.query(
+        'INSERT INTO records (dateKey, salary, hours) VALUES ($1, $2, $3) RETURNING *',
+        [formattedDateKey, salary, hours]
+      );
+  
+      console.log('レコードが正常に挿入されました');
+      res.status(201).json({ success: true, data: result.rows[0] });
+    } catch (error) {
+      console.error('レコードの挿入エラー:', error);
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+  
+  // ...
+  
 
 // 月ごとの合計値を取得するAPIエンドポイント
 app.get('/api/monthlyTotals', async (req, res) => {
