@@ -59,6 +59,6 @@ app.post('/api/records', async (req, res) => {
 });
 
 // サーバーを指定されたポートで起動
-app.listen(PORT, () => {
+app.listen(port, () => {
   console.log(`サーバーがポート${PORT}で実行されています`);
 });
