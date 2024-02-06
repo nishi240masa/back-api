@@ -62,6 +62,56 @@ app.post('/api/records', async (req, res) => {
   }
 });
 
+
+// 各月の合計値を取得するAPIエンドポイント
+app.get('/api/monthlyTotals', async (req, res) => {
+    try {
+      const monthlyTotalsQuery = `
+        SELECT
+          EXTRACT(MONTH FROM TO_DATE(dateKey, 'YYYY-MM-DD')) AS month,
+          SUM(salary) AS totalSalary,
+          SUM(hours) AS totalHours
+        FROM records
+        GROUP BY EXTRACT(MONTH FROM TO_DATE(dateKey, 'YYYY-MM-DD'));
+      `;
+  
+      const result = await pool.query(monthlyTotalsQuery);
+      const monthlyTotals = {};
+  
+      result.rows.forEach(row => {
+        monthlyTotals[row.month] = {
+          totalSalary: row.totalSalary,
+          totalHours: row.totalHours,
+        };
+      });
+  
+      res.json({ success: true, data: monthlyTotals });
+    } catch (error) {
+      console.error('月ごとの合計値の取得エラー:', error);
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+  
+  // 全体の合計値を取得するAPIエンドポイント
+  app.get('/api/total', async (req, res) => {
+    try {
+      const totalQuery = `
+        SELECT
+          SUM(salary) AS totalSalary,
+          SUM(hours) AS totalHours
+        FROM records;
+      `;
+  
+      const result = await pool.query(totalQuery);
+      const total = result.rows[0];
+  
+      res.json({ success: true, data: total });
+    } catch (error) {
+      console.error('全体の合計値の取得エラー:', error);
+      res.status(500).json({ success: false, error: error.message });
+    }
+  });
+
 app.listen(port, () => {
   console.log(`サーバーがポート${port}で実行されています`);
 });
