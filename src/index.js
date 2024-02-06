@@ -27,7 +27,7 @@ pool.connect(err => {
 const createTableQuery = `
   CREATE TABLE IF NOT EXISTS records (
     id SERIAL PRIMARY KEY,
-    dateKey VARCHAR(255) NOT NULL,
+    dateKey DATE NOT NULL,  -- dateKeyをDATE型に変更
     salary INT NOT NULL,
     hours INT NOT NULL
   );
@@ -62,33 +62,33 @@ app.post('/api/records', async (req, res) => {
   }
 });
 
-
 // 月ごとの合計値を取得するAPIエンドポイント
 app.get('/api/monthlyTotals', async (req, res) => {
-    try {
-      const result = await pool.query('SELECT EXTRACT(MONTH FROM dateKey) AS month, SUM(salary) AS totalSalary, SUM(hours) AS totalHours FROM records GROUP BY month ORDER BY month');
-      const monthlyTotals = result.rows.reduce((acc, row) => {
-        acc[row.month] = { salary: row.totalSalary || 0, hours: row.totalHours || 0 };
-        return acc;
-      }, {});
-      res.json({ success: true, data: monthlyTotals });
-    } catch (error) {
-      console.error('月ごとの合計値の取得エラー:', error);
-      res.status(500).json({ success: false, error: '内部サーバーエラー' });
-    }
-  });
-  
-  // 全体の合計値を取得するAPIエンドポイント
-  app.get('/api/total', async (req, res) => {
-    try {
-      const result = await pool.query('SELECT SUM(salary) AS totalSalary, SUM(hours) AS totalHours FROM records');
-      const total = result.rows[0];
-      res.json({ success: true, data: { salary: total.totalSalary || 0, hours: total.totalHours || 0 } });
-    } catch (error) {
-      console.error('全体の合計値の取得エラー:', error);
-      res.status(500).json({ success: false, error: '内部サーバーエラー' });
-    }
-  });
+  try {
+    const result = await pool.query('SELECT EXTRACT(MONTH FROM dateKey) AS month, SUM(salary) AS totalSalary, SUM(hours) AS totalHours FROM records GROUP BY month ORDER BY month');
+    const monthlyTotals = result.rows.reduce((acc, row) => {
+      acc[row.month] = { salary: row.totalSalary || 0, hours: row.totalHours || 0 };
+      return acc;
+    }, {});
+    res.json({ success: true, data: monthlyTotals });
+  } catch (error) {
+    console.error('月ごとの合計値の取得エラー:', error);
+    res.status(500).json({ success: false, error: '内部サーバーエラー' });
+  }
+});
+
+// 全体の合計値を取得するAPIエンドポイント
+app.get('/api/total', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT SUM(salary) AS totalSalary, SUM(hours) AS totalHours FROM records');
+    const total = result.rows[0];
+    res.json({ success: true, data: { salary: total.totalSalary || 0, hours: total.totalHours || 0 } });
+  } catch (error) {
+    console.error('全体の合計値の取得エラー:', error);
+    res.status(500).json({ success: false, error: '内部サーバーエラー' });
+  }
+});
+
 app.listen(port, () => {
   console.log(`サーバーがポート${port}で実行されています`);
 });
