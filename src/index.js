@@ -51,7 +51,7 @@ app.post('/api/records', async (req, res) => {
     );
 
     console.log('レコードが正常に挿入されました');
-    res.status(201).json({ message: 'レコードが正常に作成されました', data: result.rows[0] });
+    res.status(201).json({ message: 'レコードが正常に作成された', data: result.rows[0] });
   } catch (error) {
     console.error('レコードの挿入エラー:', error);
     res.status(500).json({ message: '内部サーバーエラー' });
