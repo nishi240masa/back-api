@@ -68,11 +68,11 @@ app.get('/api/monthlyTotals', async (req, res) => {
     try {
       const monthlyTotalsQuery = `
         SELECT
-          EXTRACT(MONTH FROM TO_DATE(dateKey, 'YYYY-MM-DD')) AS month,
+          EXTRACT(MONTH FROM TO_DATE(dateKey, 'MM-DD')) AS month,
           SUM(salary) AS totalSalary,
           SUM(hours) AS totalHours
         FROM records
-        GROUP BY EXTRACT(MONTH FROM TO_DATE(dateKey, 'YYYY-MM-DD'));
+        GROUP BY EXTRACT(MONTH FROM TO_DATE(dateKey, 'MM-DD'));
       `;
   
       const result = await pool.query(monthlyTotalsQuery);
