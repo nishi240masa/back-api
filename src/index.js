@@ -29,10 +29,10 @@ pool.connect(err => {
 // recordsテーブルを作成するSQLクエリ
 const createTableQuery = `
   CREATE TABLE IF NOT EXISTS records (
-    id SERIAL PRIMARY KEY,          // 自動生成される主キー
-    dateKey VARCHAR(255) NOT NULL,  // 作業日付を表すキー
-    salary INT NOT NULL,             // 給与
-    hours INT NOT NULL               // 労働時間
+    id SERIAL PRIMARY KEY,          
+    dateKey VARCHAR(255) NOT NULL,  
+    salary INT NOT NULL,             
+    hours INT NOT NULL           
   );
 `;
 
