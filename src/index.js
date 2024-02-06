@@ -105,6 +105,8 @@ app.get('/api/total', async (req, res) => {
       res.json({ success: true, data: { salary: total[0], hours: total[1] } });
       console.log('全体の合計値:', total.totalSalary, total.totalHours);
       console.log('tota:', total);
+      console.log('total[0]:', total[0]);
+        console.log('total[1]:', total[1]);
       console.log('全体の合計値の取得に成功しました');
     } catch (error) {
       console.error('全体の合計値の取得エラー:', error);
