@@ -78,25 +78,32 @@ app.post('/api/records', async (req, res) => {
 
 // 月ごとの合計値を取得するAPIエンドポイント
 app.get('/api/monthlyTotals', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT EXTRACT(MONTH FROM dateKey) AS month, SUM(salary) AS totalSalary, SUM(hours) AS totalHours FROM records GROUP BY month ORDER BY month');
-    
-    console.log('result:', result);
-
-    console.log('result.rows:', result.rows);
-    console.log('result.rows[0]:', result.rows[0]);
-    mon = result.rows[0];
-    const monthlyTotals = { month: mon.month, totalsalary: mon.totalsalary, totalhours: mon.totalhours};
-
-    res.json({ success: true, data: monthlyTotals });
-
-    console.log('月ごとの合計値:', monthlyTotals);
-    console.log('月ごとの合計値の取得に成功しました');
-  } catch (error) {
-    console.error('月ごとの合計値の取得エラー:', error);
-    res.status(500).json({ success: false, error: '内部サーバーエラー' });
-  }
-});
+    try {
+      // リクエストからクエリパラメーターで指定された月を取得
+      const month = req.query.month;
+  
+      // クエリのプレースホルダーを使って月ごとの合計を取得するクエリを準備
+      const query = 'SELECT SUM(salary) AS totalSalary, SUM(hours) AS totalHours FROM records WHERE EXTRACT(MONTH FROM dateKey) = $1';
+      
+      // クエリを実行し、クエリパラメーターを渡す
+      const result = await pool.query(query, [month]);
+  
+      // 結果を取得してレスポンスに返す
+      if (result.rows.length > 0) {
+        const totals = result.rows[0];
+        res.json({ success: true, data: totals });
+      } else {
+        // レコードが見つからない場合は0を返す
+        res.json({ success: true, data: { totalSalary: 0, totalHours: 0 } });
+      }
+  
+      console.log('月ごとの合計値の取得に成功しました');
+    } catch (error) {
+      console.error('月ごとの合計値の取得エラー:', error);
+      res.status(500).json({ success: false, error: '内部サーバーエラー' });
+    }
+  });
+  
 
 // 全体の合計値を取得するAPIエンドポイント
 app.get('/api/total', async (req, res) => {
