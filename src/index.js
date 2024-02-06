@@ -98,8 +98,8 @@ app.get('/api/total', async (req, res) => {
       const total = result.rows[0];
   
       // total が空の場合、初期値として 0 を設定
-      const totalSalary = total;
-      const totalHours = total;
+      const totalSalary = total.totalSalary;
+      const totalHours = total.totalHours;
   
 
       res.json({ success: true, data: { salary: totalSalary, hours: totalHours } });
