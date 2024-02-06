@@ -17,7 +17,13 @@ const pool = new Pool({
 
 });
 
-pool.connect();
+pool.connect(err => {
+  if (err) {
+    console.error('データベースへの接続エラー:', err);
+  } else {
+    console.log('データベースに正常に接続されました');
+  }
+});
 
 
 // recordsテーブルを作成するSQLクエリ
