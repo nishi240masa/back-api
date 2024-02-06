@@ -17,6 +17,8 @@ const pool = new Pool({
 
 });
 
+pool.connect();
+
 
 // recordsテーブルを作成するSQLクエリ
 const createTableQuery = `
