@@ -109,6 +109,7 @@ app.get('/api/total', async (req, res) => {
     }
   });
   
+  
 app.listen(port, () => {
   console.log(`サーバーがポート${port}で実行されています`);
 });
