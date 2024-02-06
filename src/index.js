@@ -93,16 +93,22 @@ app.get('/api/monthlyTotals', async (req, res) => {
 
 // 全体の合計値を取得するAPIエンドポイント
 app.get('/api/total', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT SUM(salary) AS totalSalary, SUM(hours) AS totalHours FROM records');
-    const total = result.rows[0];
-    res.json({ success: true, data: { salary: total.totalSalary || 0, hours: total.totalHours || 0 } });
-  } catch (error) {
-    console.error('全体の合計値の取得エラー:', error);
-    res.status(500).json({ success: false, error: '内部サーバーエラー' });
-  }
-});
-
+    try {
+      const result = await pool.query('SELECT SUM(salary) AS totalSalary, SUM(hours) AS totalHours FROM records');
+      const total = result.rows[0];
+  
+      // total が空の場合、初期値として 0 を設定
+      const totalSalary = total ? total.totalSalary || 0 : 0;
+      const totalHours = total ? total.totalHours || 0 : 0;
+  
+      res.json({ success: true, data: { salary: totalSalary, hours: totalHours } });
+      console.log('全体の合計値:', total);
+    } catch (error) {
+      console.error('全体の合計値の取得エラー:', error);
+      res.status(500).json({ success: false, error: '内部サーバーエラー' });
+    }
+  });
+  
 app.listen(port, () => {
   console.log(`サーバーがポート${port}で実行されています`);
 });
