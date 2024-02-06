@@ -27,7 +27,7 @@ pool.connect(err => {
 const createTableQuery = `
   CREATE TABLE IF NOT EXISTS records (
     id SERIAL PRIMARY KEY,
-    dateKey DATE NOT NULL,  -- dateKeyをDATE型に変更
+    dateKey DATE NOT NULL, 
     salary INT NOT NULL,
     hours INT NOT NULL
   );
