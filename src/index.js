@@ -80,10 +80,18 @@ app.post('/api/records', async (req, res) => {
 app.get('/api/monthlyTotals', async (req, res) => {
   try {
     const result = await pool.query('SELECT EXTRACT(MONTH FROM dateKey) AS month, SUM(salary) AS totalSalary, SUM(hours) AS totalHours FROM records GROUP BY month ORDER BY month');
+    
+    console.log('result:', result);
+
+    console.log('result.rows:', result.rows);
+    console.log('result.rows[0]:', result.rows[0]);
     const monthlyTotals = result.rows.reduce((acc, row) => {
       acc[row.month] = { salary: row.totalSalary || 0, hours: row.totalHours || 0 };
       return acc;
     }, {});
+    console.log('result.rows[1]:', result.rows[1]);
+    console.log('result.rows.reduce:', result.rows.reduce);
+    console.log('monthlyTotals:', monthlyTotals);
     res.json({ success: true, data: monthlyTotals });
 
     console.log('月ごとの合計値:', monthlyTotals);
