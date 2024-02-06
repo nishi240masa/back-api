@@ -33,14 +33,6 @@ const createTableQuery = `
   );
 `;
 
-pool.query('DROP TABLE IF EXISTS records', (err, result) => {
-    if (err) {
-    console.error('テーブルの削除エラー:', err);
-  } else {
-    console.log('テーブルが正常に削除されました');
-  }
-});
-
 
 pool.query(createTableQuery, (err, result) => {
   if (err) {
