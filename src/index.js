@@ -85,6 +85,9 @@ app.get('/api/monthlyTotals', async (req, res) => {
       return acc;
     }, {});
     res.json({ success: true, data: monthlyTotals });
+
+    console.log('月ごとの合計値:', monthlyTotals);
+    console.log('月ごとの合計値の取得に成功しました');
   } catch (error) {
     console.error('月ごとの合計値の取得エラー:', error);
     res.status(500).json({ success: false, error: '内部サーバーエラー' });
